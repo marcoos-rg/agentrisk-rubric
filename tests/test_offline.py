@@ -192,6 +192,33 @@ def test_run_end_to_end_with_fake_server():
         assert cmp_["answer_flips"] == [] and cmp_["mean_tv"] == 0
 
 
+def test_ordinal_model_on_feature_csv():
+    try:
+        from agentrisk import model as model_mod
+    except ImportError:
+        return  # torch/sklearn optional in minimal environments
+    rb = load("v1_binary_factors")
+    names = feature_names(rb)
+    with tempfile.TemporaryDirectory() as d:
+        run_dir = Path(d)
+        (run_dir / "meta.json").write_text(json.dumps({"split": "train"}), encoding="utf-8")
+        # Build 20 synthetic rows across 5 distinct groups with monotonic signal
+        lines = ["example_id,gold," + ",".join(names)]
+        for i in range(20):
+            lvl = (i % 5) + 1
+            vec = [0.0] * len(names)
+            if lvl >= 2:
+                vec[0] = 1.0  # G1_has_effect=YES
+                for k in range(1, lvl):
+                    vec[2 * k] = 1.0
+            lines.append(f"SYN-{i:03d},{lvl}," + ",".join(str(v) for v in vec))
+        (run_dir / "features_hard.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+        (run_dir / "features_soft.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+        rep = model_mod.evaluate_run(run_dir, n_splits=4, epochs=40)
+        assert rep["hard_features"]["st1_hard_gate"]["cv_mae"] < rep["hard_features"]["st1_hard_gate"]["baseline_median_mae"]
+        assert (run_dir / "model_eval.json").exists()
+
+
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     failed = 0
