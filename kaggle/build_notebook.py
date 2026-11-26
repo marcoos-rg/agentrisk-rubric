@@ -185,5 +185,6 @@ nb = {"cells": cells, "nbformat": 4, "nbformat_minor": 5, "metadata": {
     "language_info": {"name": "python"},
     "kaggle": {"accelerator": "nvidiaTeslaT4", "isInternetEnabled": True, "isGpuEnabled": True}}}
 out = Path(__file__).with_name("agentrisk_kaggle.ipynb")
-out.write_text(json.dumps(nb, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+with out.open("w", encoding="utf-8", newline="\n") as f:   # LF on every OS (see .gitattributes)
+    f.write(json.dumps(nb, indent=1, ensure_ascii=False) + "\n")
 print(f"wrote {out.name}: {len(cells)} cells · repo {args.repo_url} · branch {args.branch}")
