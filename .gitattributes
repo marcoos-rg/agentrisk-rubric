@@ -1,0 +1,4 @@
+# LF everywhere, so files (and the rubric sha256 stored with every run) are identical on
+# Windows, macOS, Linux and Kaggle.
+* text=auto eol=lf
+*.png binary
