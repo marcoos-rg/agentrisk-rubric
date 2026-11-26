@@ -1,0 +1,20 @@
+# Dataset: public on Hugging Face, downloaded by `python -m agentrisk.data`
+data/
+
+# Run outputs: share them as results.zip / in the team drive, not in git
+results/
+*.zip
+vllm.log
+
+# Secrets — API keys and tokens live in environment variables or Kaggle Secrets, never in files
+.env
+*.key
+*token*.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/

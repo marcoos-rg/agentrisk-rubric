@@ -1,0 +1,5 @@
+# Runtime (local runs against any OpenAI-compatible server; Kaggle installs these + vllm itself)
+openai>=1.40
+httpx>=0.27
+# Python >= 3.10. Everything else (rubric check, analysis, tests) uses the standard library only.
+# Optional: pytest (python -m pytest tests) — tests also run with plain `python tests/test_offline.py`.
